@@ -1,0 +1,6 @@
+@Movimentos.API_HostAddress = http://localhost:5237
+
+GET {{Movimentos.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

@@ -44,11 +44,11 @@ namespace Movimentos.Business.Service
             }
         }
 
-        public async Task<IEnumerable<MovimentoManualDTO>> ConsultarMovimentos(int mes, int ano)
+        public async Task<IEnumerable<MovimentoManualDTO>> ConsultarMovimentos()
         {
             try
             {
-                return await _movimentoRepository.ObterMovimentosManuais(mes, ano);
+                return await _movimentoRepository.ObterMovimentosManuais();
             }
             catch (Exception ex)
             {

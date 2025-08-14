@@ -11,6 +11,6 @@ namespace Movimentos.Business.Service.Interface
     public interface IMovimentoService
     {
         Task InserirMovimento(Movimento movimento);
-        Task<IEnumerable<MovimentoManualDTO>> ConsultarMovimentos(int mes, int ano);
+        Task<IEnumerable<MovimentoManualDTO>> ConsultarMovimentos();
     }
 }

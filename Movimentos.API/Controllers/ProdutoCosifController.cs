@@ -18,8 +18,8 @@ namespace Movimentos.API.Controllers
             _produtoService = produtoService ?? throw new ArgumentNullException(nameof(produtoService));
         }
 
-        [HttpGet("CarregarProdutoCosif/{codigoProduto}")]
-        public async Task<IActionResult> CarregarProdutoCosif(string codigoProduto)
+        [HttpGet("CarregarProdutoCosif")]
+        public async Task<IActionResult> CarregarProdutoCosif([FromQuery] string codigoProduto)
         {
             try
             {

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Movimentos.Business.Service.Interface;
+using Movimentos.Entities.DTO;
 using Movimentos.Entities.Entities;
 using System;
 using System.Threading.Tasks;
@@ -20,7 +21,7 @@ namespace Movimentos.API.Controllers
         }
 
         [HttpPost("InserirMovimento")]
-        public async Task<IActionResult> InserirMovimento([FromBody] Movimento movimento)
+        public async Task<IActionResult> InserirMovimento([FromBody] MovimentoManualDTO movimentoDTO)
         {
             if (!ModelState.IsValid)
             {
@@ -34,7 +35,18 @@ namespace Movimentos.API.Controllers
 
             try
             {
-                await _movimentoService.InserirMovimento(movimento);
+                var movimentoEntity = new Movimento
+                {
+                    DataMes = movimentoDTO.Mes,
+                    DataAno = movimentoDTO.Ano,
+                    CodigoProduto = movimentoDTO.CodigoProduto,
+                    CodigoCosif = movimentoDTO.CodigoCosif,
+                    NumeroLancamento = movimentoDTO.NumeroLancamento,
+                    Descricao = movimentoDTO.DescricaoMovimento,
+                    Valor = movimentoDTO.ValorMovimento
+                };
+
+                await _movimentoService.InserirMovimento(movimentoEntity);
 
                 return Ok(new
                 {
@@ -62,16 +74,14 @@ namespace Movimentos.API.Controllers
             }
         }
 
-        [HttpGet("ConsultarMovimentos/{mes:int}/{ano:int}")]
-        public async Task<IActionResult> ConsultarMovimentos(int mes, int ano)
+        [HttpGet("ConsultarMovimentos")]
+        public async Task<IActionResult> ConsultarMovimentos()
         {
             try
             {
-                var movimentos = await _movimentoService.ConsultarMovimentos(mes, ano);
+                var movimentos = await _movimentoService.ConsultarMovimentos();
 
-                if (movimentos == null)
-                    return NotFound(new { Error = "Nenhum movimento encontrado para os parâmetros informados." });
-
+               
                 return Ok(movimentos);
             }
             catch (ApplicationException ex)

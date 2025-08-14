@@ -23,10 +23,10 @@ namespace Movimentos.Data.Repositories
                 .MaxAsync() ?? 0;
         }
 
-        public async Task<List<MovimentoManualDTO>> ObterMovimentosManuais(int mes, int ano)
+        public async Task<List<MovimentoManualDTO>> ObterMovimentosManuais()
         {
             return await _context.MovimentosManuaisDTO
-                .FromSqlInterpolated($"EXEC dbo.SP_OBTER_MOVIMENTOS_MANUAIS {mes}, {ano}")
+                .FromSqlInterpolated($"EXEC dbo.SP_OBTER_MOVIMENTOS_MANUAIS")
                 .ToListAsync();
         }
 

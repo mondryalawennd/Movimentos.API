@@ -14,6 +14,7 @@ using Movimentos.Data.Repositories.Interface;
 using System.Text;
 using Serilog;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Movimentos.Entities.Entities;
 
 namespace Movimentos.API
 {
@@ -27,8 +28,13 @@ namespace Movimentos.API
             var connectionString = builder.Configuration.GetConnectionString("DBConnection");
             builder.Services.AddDbContext<AppDBContext>(options => options.UseSqlServer(connectionString));
 
+            builder.Services.AddScoped<IGenericRepository<Produto>, GenericRepository<Produto>>();
+            builder.Services.AddScoped<IGenericRepository<ProdutoCosif>, GenericRepository<ProdutoCosif>>();
             builder.Services.AddScoped<IMovimentoRepository, MovimentoRepository>();
             builder.Services.AddScoped<IMovimentoService, MovimentoService>();
+            builder.Services.AddScoped<IProdutoCosifService, ProdutoCosifService>();
+            builder.Services.AddScoped<IProdutoService, ProdutoService>();
+
             builder.Services.AddSingleton<ILoggerService, ConsoleLoggerService>();
             builder.Services.AddControllers();
             builder.Services.AddHttpContextAccessor();
@@ -53,11 +59,13 @@ namespace Movimentos.API
                 dbContextOptions.AddPolicy(CorsPolicy,
                    builder =>
                    {
-                       builder.WithOrigins("http://localhost:53753/", "http://localhost:53753/")
+                       builder.WithOrigins("http://localhost:4200/", "http://localhost:4200/")
                        .AllowAnyMethod()
                        .AllowAnyHeader();
                    });
             });
+
+            builder.Services.AddEndpointsApiExplorer();
 
             // Configuração JWT
             var authSettings = builder.Configuration.GetSection("AuthSettings").Get<AuthSettings>();
@@ -100,7 +108,12 @@ namespace Movimentos.API
 
             app.UseHttpsRedirection();
             app.MapControllers();
+            app.UseCors(builder => builder
+                 .AllowAnyOrigin()
+                 .AllowAnyMethod()
+                 .AllowAnyHeader());
             app.Run();
+
 
             if (app.Environment.IsDevelopment())
             {
